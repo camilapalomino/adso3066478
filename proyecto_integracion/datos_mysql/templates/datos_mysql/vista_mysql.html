@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Órdenes MySQL</title>
+</head>
+<body>
+    <h2>Lista de Órdenes</h2>
+    <ul>
+    {% for orden in ordenes %}
+        <li>{{ orden.producto }} - {{ orden.cantidad }}</li>
+    {% endfor %}
+    </ul>
+
+    <div>
+        {% if ordenes.has_previous %}
+            <a href="?page={{ ordenes.previous_page_number }}">Anterior</a>
+        {% endif %}
+        Página {{ ordenes.number }} de {{ ordenes.paginator.num_pages }}
+        {% if ordenes.has_next %}
+            <a href="?page={{ ordenes.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </div>
+</body>
+</html>
