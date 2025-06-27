@@ -1,0 +1,93 @@
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+
+console = Console()
+
+def run(db):
+    """Módulo de conceptos básicos de MongoDB"""
+    console.print(Panel.fit("📌 [bold cyan]Conceptos Básicos de MongoDB[/bold cyan] 📌"))
+
+    while True:
+            table = Table(title="Operaciones Básicas", show_header=True)
+            table.add_column("Opción", style="cyan")
+            table.add_column("Comando", style="green")
+            table.add_column("Descripción", style="while")
+
+            table.add.row("1", "db.help()", "Mostrar ayuda de comandos de base de datos")
+            table.add.row("2", "db.stats()", "Mostrar estadisticas de la BD")
+            table.add.row("3", "show dbs", "Listar todas las bases de datos")
+            table.add.row("4", "use <db>", "Cambiar a una base de datos")
+            table.add.row("5", "db.dropDatabase()", "Crear una nueva colección")
+            table.add.row("6", "db.createCollection()", "Crear una nueva colección")
+            table.add.row("7", "show collections", "Listar colecciones en la DB actual")
+            table.add.row("8", "db<col>.drop()", "eliminar una colección")
+            table.add.row("0", "Volver", "Regresar al menú principal")
+
+        console.print(table)
+
+        choice = console.input("\n🔹Seleccione una operación para ejecutar (0-8): ")
+
+        if choice == "0":
+            break
+
+        elif choice == "1":
+            console.print("\n[bold]Ejemplo de db.help():[/bold]")
+            console.print("""
+            Este comando muestra todos los métodos disponibles para manipular la base de datos.
+            [yellow]Uso:[/yellow]
+            > db.help()
+            [yellow]Salida típica:[/yellow]
+            DB methods:
+            db.adminCommand(nameOrDocument) - switches to 'admin' db
+            db.aggregate([pipeline], {options}) - performs aggregation
+            db.createCollection(name, options) - creates new collection
+            ... (más métodos)
+            """)
+
+        elif choice == "2":
+            console.print("\n[bold]Ejemplo de db.stats():[/bold]")
+            stats = db.command("dbstats")
+            result_table = Table(title="Estadisticas de la Base de Datos")
+            result_table.add_column("Métrica") 
+            result_table.add_column("Valor") 
+
+            for key.value in stats.items():
+                result_table.add_row(str(key), str(value))
+
+                console.print(result_table)
+
+        elif choice == "3":
+            console.print("\n[bold]Ejemplo de show dbs:[/bold]")
+            dbs = db.client.list_database_names()
+
+            db_table = Table(title="Bases de Datos Disponibles")
+            db_table.add_column("Nombre")
+
+            for db.ame in dbs:
+                db_table.add_row(db_name)
+
+            console.print(db_table)
+
+        elif choice =="4":
+            db_name = console.input("Ingrese el nombre de la BD a cambiar: ")
+            try:
+                new_db = db.client[db_name]
+                console.print(f"\n✅ [green]Cambiado a la base de datos '{db_name}'[/green]")
+
+                cols = new_db.list_collection_names()
+                if cols:
+                    console.print(f"\nColecciones en '{db_name}':")
+                    for col in cols:
+                        console.print(f"- {col}")
+                else: 
+                    console.print(f"\ni️ La BD '{db_name}' no tiene colecciones")
+
+            except Exception as e:
+                console.print(f"\n❌ [red]Error: {e}[/red]")
+
+        else: 
+            console.print("\n❌[red]Opción inválida. Intente nuevamente.[/red]")
+
+        console.input("\nPresione Enter para continuar...")
+        console.clear()
